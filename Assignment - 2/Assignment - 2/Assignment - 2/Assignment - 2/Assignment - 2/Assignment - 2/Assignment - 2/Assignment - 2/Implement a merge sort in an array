@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <stdlib.h> // For VLAs, though often built-in
+
+void merge(int arr[], int left, int mid, int right) {
+    int i, j, k;
+    
+    // Calculate sizes of the two temporary sub-arrays
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    // --- Create temporary arrays ---
+    // Using Variable Length Arrays (VLAs)
+    int L[n1], R[n2];
+
+    // --- 1. Copy data to temp arrays L[] and R[] ---
+    for (i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    // --- 2. Merge the temp arrays back into arr[] ---
+    
+    // Initial indices of first, second, and merged sub-arrays
+    i = 0;    // Initial index of first sub-array
+    j = 0;    // Initial index of second sub-array
+    k = left; // Initial index of merged sub-array (in original arr)
+
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // --- 3. Copy any remaining elements ---
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    // If we ran out of elements in L[], copy the rest of R[]
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int arr[], int left, int right) {
+    // Base case: if left >= right, the sub-array has 0 or 1 elements
+    // and is already sorted.
+    if (left < right) {
+        
+        int mid = left + (right - left) / 2;
+
+        // Recursively sort the first and second halves
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        // Merge the two sorted halves
+        merge(arr, left, mid, right);
+    }
+}
+
+/**
+ * @brief A helper function to print the array.
+ */
+void printArray(int arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+// --- Main Program ---
+int main() {
+    int n;
+
+    // --- 1. Get Array Size ---
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
+
+    if (n <= 0) {
+        printf("Invalid array size.\n");
+        return 1; // Exit
+    }
+
+    // --- 2. Create and Fill Array ---
+    int arr[n];
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // --- 3. Print Original Array ---
+    printf("\nOriginal array: \n");
+    printArray(arr, n);
+
+    // --- 4. Call Merge Sort ---
+    // We sort the entire array from index 0 to n-1
+    mergeSort(arr, 0, n - 1);
+
+    // --- 5. Print Sorted Array ---
+    printf("\nSorted array in ascending order: \n");
+    printArray(arr, n);
+
+    return 0;
+}
+
+
+//OUTPUT
+Enter the number of elements: 8
+Enter 8 elements:
+38
+27
+43
+3
+9
+82
+10
+5
+
+Original array: 
+38 27 43 3 9 82 10 5 
+
+Sorted array in ascending order: 
+3 5 9 10 27 38 43 82
