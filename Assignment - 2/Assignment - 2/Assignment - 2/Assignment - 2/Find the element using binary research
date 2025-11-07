@@ -1,0 +1,92 @@
+#include <stdio.h>
+
+int binarySearch(int arr[], int n, int target) {
+    int low = 0;
+    int high = n - 1;
+
+    // Keep looping as long as the search space is valid
+    while (low <= high) {
+        // Calculate mid-point safely to avoid potential integer overflow
+        int mid = low + (high - low) / 2;
+
+        // 1. Check if target is at the middle
+        if (arr[mid] == target) {
+            return mid; // Found it!
+        }
+
+        // 2. If target is greater, ignore the left half
+        if (arr[mid] < target) {
+            low = mid + 1;
+        }
+        // 3. If target is smaller, ignore the right half
+        else {
+            high = mid - 1;
+        }
+    }
+
+    // Loop finished, element was not found
+    return -1;
+}
+
+int main() {
+    int n; // To store the size of the array
+    int target; // To store the element to search for
+
+    // --- 1. Get Array Size ---
+    printf("Enter the number of elements in the array: ");
+    scanf("%d", &n);
+
+    if (n <= 0) {
+        printf("Invalid array size.\n");
+        return 1; // Exit
+    }
+
+    // --- 2. Create Array ---
+    int arr[n];
+
+    // --- 3. Get Array Elements (Must be sorted) ---
+    printf("Enter %d elements IN ASCENDING (SORTED) ORDER:\n", n);
+    for (int i = 0; i < n; i++) {
+        printf("Element[%d]: ", i);
+        scanf("%d", &arr[i]);
+    }
+
+    // --- 4. Get Target Element ---
+    printf("\nEnter the target element to search for: ");
+    scanf("%d", &target);
+
+    // --- 5. Perform Search ---
+    int resultIndex = binarySearch(arr, n, target);
+
+    // --- 6. Print Result ---
+    if (resultIndex != -1) {
+        printf("\nElement %d found at index: %d\n", target, resultIndex);
+    } else {
+        printf("\nElement %d not found in the array.\n", target);
+    }
+
+    return 0;
+}
+
+
+
+//OUTPUT
+Enter the number of elements in the array: 13
+Enter 13 elements IN ASCENDING (SORTED) ORDER:
+Element[0]: 6
+Element[1]: 6
+Element[2]: 7
+Element[3]: 7
+Element[4]: 8
+Element[5]: 9
+Element[6]: 12
+Element[7]: 14
+Element[8]: 15
+Element[9]: 18
+Element[10]: 19
+Element[11]: 20
+Element[12]: 21
+
+Enter the target element to search for: 18
+
+Element 18 found at index: 9
